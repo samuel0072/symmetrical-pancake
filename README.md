@@ -1,2 +1,3 @@
 # symmetrical-pancake
-Desenvolvido com Vue.js 
+
+Desenvolvido com Vue.js
