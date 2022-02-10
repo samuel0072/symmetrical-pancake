@@ -27,6 +27,7 @@
         >
           View UI
         </Button>
+        <NuxtLink to="fun"> Fun </NuxtLink>
       </div>
     </div>
   </div>
