@@ -1,13 +1,21 @@
 <template>
     <div>
-        <div id="basic-data">
-            <div>
-                <h1>{{sortition.nickname}}</h1>
-                <p>{{sortition.description}}</p>
+        <div>
+            <div id="basic-data">
+                <input
+                    id="sortition-nickname"
+                    v-model="sortition.nickname"
+                    type="text"
+                >
+                <input
+                    id="sortition-description"
+                    v-model="sortition.description"
+                    type="text"
+                >
             </div>
 
             <div>
-                <button @click="saveNewEntries">Salvar</button>
+                <button @click="performSaves">Salvar</button>
                 <button @click="performSortition">Executar Sorteio</button>
             </div>
             <div v-if="results.length > 0">
@@ -22,7 +30,7 @@
         </div>
         <div>
             <div>
-                <h2>Entradas salvas</h2>
+                <h2>Entradas Salvas</h2>
                 <ul id="pre-saved-entries">
                     <li v-for="(entry, index) in sortition.entries" :key="index">
                         {{entry.value}}
@@ -30,7 +38,7 @@
                 </ul>
             </div>
             <div>
-                <h2>Recém-informadas</h2>
+                <h2>Entradas Recém-Informadas</h2>
                 <ul id="new-entries">
                     <li v-for="(entry, index) in newEntries" :key="index">
                         {{entry.value}}
@@ -92,10 +100,12 @@ export default {
 
             };
             axios.post("http://127.0.0.1:8002/api/sortition/addEntries", data)
-            .then(res => {
-                this.sortition.entries = this.sortition.entries.concat(res.data);
-                this.newEntries = [];
-            });
+                .then(res => {
+                    this.sortition.entries = this.sortition.entries.concat(res.data);
+                    this.newEntries = [];
+                }).catch(e => {});
+
+
         },
         performSortition() {
             const id = this.sortition.id;
@@ -107,6 +117,18 @@ export default {
             .then(res => {
                 this.results = this.results.concat(res.data);
             });
+        },
+        saveSortitionData() {
+            try {
+                axios.put("http://127.0.0.1:8002/api/sortition/edit", this.sortition);
+            } catch (e) {
+
+            }
+
+        },
+        performSaves() {
+            this.saveNewEntries();
+            this.saveSortitionData();
         }
     },
 
