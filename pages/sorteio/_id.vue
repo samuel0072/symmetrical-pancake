@@ -1,53 +1,112 @@
 <template>
-    <div>
+    <div class="container mt-3">
         <div>
-            <div id="basic-data">
-                <input
-                    id="sortition-nickname"
-                    v-model="sortition.nickname"
-                    type="text"
-                >
-                <input
-                    id="sortition-description"
-                    v-model="sortition.description"
-                    type="text"
-                >
+            <h1 class="h1">Dados do Sorteio</h1>
+
+            <div id="basic-data" class="row">
+                <div class="col-md-">
+
+                </div>
+                <div class="col-md-5">
+                    <input
+                        id="sortition-nickname"
+                        v-model="sortition.nickname"
+                        type="text"
+                        class="form-control"
+                    >
+                </div>
+                <div class="col-md-5">
+                    <input
+                        id="sortition-description"
+                        v-model="sortition.description"
+                        type="text"
+                        class="form-control"
+                    >
+                </div>
+
             </div>
 
-            <div>
-                <button @click="performSaves">Salvar</button>
-                <button @click="performSortition">Executar Sorteio</button>
+            <div class="row mt-2">
+                <div class="col-md-4"></div>
+                <div class="col-md-5">
+                    <div class="btn-group">
+                        <button
+                            @click="performSaves"
+                            class="btn btn-success">Salvar</button>
+                        <button @click="performSortition"
+                                class="btn btn-warning">Executar Sorteio</button>
+                    </div>
+                </div>
             </div>
+
             <div v-if="results.length > 0">
-                <h3>Resultados</h3>
-                <ul v-for="(res, index) in results" :key="index">
-                    <li>
-                        {{res.value}}
-                    </li>
-                </ul>
+                <div class="row" >
+                    <div class="col-md-3">
+
+                    </div>
+                    <h3 class="h3">Resultados</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+
+                    </div>
+                    <div class="col-md-5">
+                        <ul
+                            class="list-group">
+                            <li v-for="(res, index) in results"
+                                :key="index" class="list-group-item">
+                                {{res.value}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
         </div>
+
         <div>
-            <div>
+            <div class="row">
+                <div class="col-md-3">
+
+                </div>
                 <h2>Entradas Salvas</h2>
-                <ul id="pre-saved-entries">
-                    <li v-for="(entry, index) in sortition.entries" :key="index">
-                        {{entry.value}}
-                    </li>
-                </ul>
+                <div class="col-md-5">
+                    <ul id="pre-saved-entries"
+                        class="list-group">
+                        <li
+                            v-for="(entry, index) in sortition.entries"
+                            :key="index"
+                            class="list-group-item">
+                            {{entry.value}}
+                        </li>
+                    </ul>
+                </div>
+
             </div>
-            <div>
+            <div class="row">
+                <div class="col-md-3">
+
+                </div>
                 <h2>Entradas Recém-Informadas</h2>
-                <ul id="new-entries">
-                    <li v-for="(entry, index) in newEntries" :key="index">
-                        {{entry.value}}
-                    </li>
-                    <li>
-                        <input type="text" v-model="newEntry.value"/>
-                        <button @click="addEntry">Adicionar</button>
-                    </li>
-                </ul>
+                <div class="col-md-5">
+                    <ul id="new-entries" class="list-group">
+                        <li
+                            v-for="(entry, index) in newEntries"
+                            :key="index" class="list-group-item">
+                            {{entry.value}}
+                        </li>
+                        <li class="list-group-item">
+                            <div class="input-group">
+                                <input type="text" v-model="newEntry.value"
+                                       class="form-control"/>
+                                <button @click="addEntry"
+                                        class="btn btn-outline-success input-group-text">Adicionar</button>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+
             </div>
         </div>
 
@@ -83,7 +142,7 @@ export default {
     },
     methods: {
         getSortition(id) {
-            axios.get(`http://127.0.0.1:8002/api/sortition/${id}`)
+            axios.get(`http://127.0.0.1:8000/api/sortition/${id}`)
                 .then(res => {
                     this.sortition = res.data;
                 });
@@ -99,7 +158,7 @@ export default {
                 sortitionId: this.sortition.id,
 
             };
-            axios.post("http://127.0.0.1:8002/api/sortition/addEntries", data)
+            axios.post("http://127.0.0.1:8000/api/sortition/addEntries", data)
                 .then(res => {
                     this.sortition.entries = this.sortition.entries.concat(res.data);
                     this.newEntries = [];
@@ -113,14 +172,14 @@ export default {
                 options: {},
                 entries: this.newEntries
             };
-            axios.post(`http://127.0.0.1:8002/api/sortition/execute/${id}`, data)
+            axios.post(`http://127.0.0.1:8000/api/sortition/execute/${id}`, data)
             .then(res => {
                 this.results = this.results.concat(res.data);
             });
         },
         saveSortitionData() {
             try {
-                axios.put("http://127.0.0.1:8002/api/sortition/edit", this.sortition);
+                axios.put("http://127.0.0.1:8000/api/sortition/edit", this.sortition);
             } catch (e) {
 
             }
